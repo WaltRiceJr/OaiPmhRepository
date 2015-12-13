@@ -23,7 +23,7 @@
             echo ' ' . __('Default is "oai-pmh-repository/request" (always available), but it can be "oai/request" or simply "oai-pmh".'); ?>
         </p>
         <p class="explanation">
-            <?php echo __('Currently, harvesters can access metadata from this url: %s.', sprintf('<a href="%s">%s</a>', OAI_PMH_BASE_URL, OAI_PMH_BASE_URL)); ?></p>
+            <?php echo __('Currently, harvesters can access metadata from this url: %s.', sprintf('<a href="%s">%s</a>', OAI_PMH_BASE_URL, OAI_PMH_BASE_URL)); ?>
         </p>
         <?php echo $this->formText('oaipmh_repository_base_url', get_option('oaipmh_repository_base_url')); ?>
     </div>

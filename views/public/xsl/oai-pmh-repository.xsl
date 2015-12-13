@@ -63,9 +63,9 @@ No support (may depend on server):
     <xsl:param name="gateway-url" select="''" />
 
     <!-- Url to css and javascripts. -->
+    <xsl:param name="css-oai-pmh-repository" select="'../plugins/OaiPmhRepository/views/public/css/oai-pmh-repository.css'" />
     <xsl:param name="css-bootstrap" select="'../plugins/OaiPmhRepository/views/public/css/bootstrap.min.css'" />
     <xsl:param name="css-bootstrap-theme" select="'../plugins/OaiPmhRepository/views/public/css/bootstrap-theme.min.css'" />
-    <xsl:param name="css-oai-pmh-repository" select="'../plugins/OaiPmhRepository/views/public/css/oai-pmh-repository.css'" />
     <xsl:param name="javascript-jquery" select="'../application/views/scripts/javascripts/vendor/jquery.js'" />
     <xsl:param name="javascript-bootstrap" select="'../plugins/OaiPmhRepository/views/public/javascripts/bootstrap.min.js'" />
 
