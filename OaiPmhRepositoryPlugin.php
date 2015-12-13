@@ -158,6 +158,11 @@ class OaiPmhRepositoryPlugin extends Omeka_Plugin_AbstractPlugin
         )));
     }
 
+    public function hookInitialize()
+    {
+        add_translation_source(dirname(__FILE__) . '/languages');
+    }
+
     /**
      * Filter to add a dashboard panel.
      */
@@ -166,7 +171,6 @@ class OaiPmhRepositoryPlugin extends Omeka_Plugin_AbstractPlugin
         $html = '<h2>' . __('OAI-PMH Repository') . '</h2>';
         $html .= '<p>' . __('Harvester can access metadata from this site: %s.', sprintf('<a href="%s">%s</a>', OAI_PMH_BASE_URL, OAI_PMH_BASE_URL)) . '</p>';
         $panels[] = $html;
-
         return $panels;
     }
 
