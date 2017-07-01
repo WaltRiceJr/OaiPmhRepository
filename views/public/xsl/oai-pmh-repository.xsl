@@ -839,9 +839,9 @@ No support (may depend on server):
             </xsl:when>
             <!-- Not last page. -->
             <xsl:when test="normalize-space($path/../oai:resumptionToken/text()) != ''">
-                <xsl:value-of select="($cursor * $count) + 1" />
+                <xsl:value-of select="$cursor + 1" />
                 <xsl:text>-</xsl:text>
-                <xsl:value-of select="($cursor + 1) * $count" />
+                <xsl:value-of select="$cursor + $count" />
             </xsl:when>
             <!-- Last page. -->
             <xsl:when test="$total">
@@ -873,7 +873,7 @@ No support (may depend on server):
             </xsl:when>
             <!-- Not last page. -->
             <xsl:when test="normalize-space($path/../oai:resumptionToken/text()) != ''">
-                <xsl:value-of select="$cursor * $count" />
+                <xsl:value-of select="$cursor" />
             </xsl:when>
             <!-- Last page. -->
             <xsl:when test="$total">
