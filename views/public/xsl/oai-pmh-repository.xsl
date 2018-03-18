@@ -6,8 +6,9 @@ This stylesheet is primarily designed for Omeka Classic / Omeka S (https://omeka
 and the plugins OAI-PMH Repository (https://omeka.org/classic/plugins/OaiPmhRepository /
 https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository)
 and OAI-PMH Gateway (https://github.com/Daniel-KM/OaiPmhGateway), but can be used by
-any OAI-PMH Data Provider (https://www.openarchives.org/pmh/register_data_provider)
-(just adapt the paths to the css and js for your application).
+any OAI-PMH Data Provider (https://www.openarchives.org/pmh/register_data_provider).
+To customize it, you may need to adapt the paths to the css and js for your application.
+CDN are used by default.
 
 Includes
 - Bootstrap, published under the MIT licence (see http://getbootstrap.com).
@@ -24,7 +25,7 @@ Copyright (c) 2002-2015, DuraSpace.  All rights reserved.
 Copyrights and licences for the third parties above can be found in the specific
 files and online.
 
-Published under the licence CeCILL v2.1 (https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html).
+Published under the BSD-like licence CeCILL-B (https://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html).
 
 Basic support (see https://www.openarchives.org/OAI/2.0/guidelines.htm):
 - rightsManifest (repository and set levels)
@@ -54,27 +55,45 @@ No support (may depend on server):
         doctype-system="about:legacy-compat"
         indent="yes"/>
 
+    <!-- Url for "homepage" link (#logo is set for css if wanted). -->
     <!-- Let empty to use the link to request "Identify". -->
     <xsl:param name="homepage-url" select="''" />
     <xsl:param name="homepage-text" select="'OAI-PMH Repository'" />
 
-    <!-- Url for "powered by" link (logo is set in css if wanted). -->
+    <!-- Url for "powered by" link (#logo-powered-by is set for css if wanted). -->
     <xsl:param name="powered-by-url" select="'https://omeka.org'" />
     <xsl:param name="powered-by-text" select="'Powered by Omeka'" />
 
-    <!-- Url for the xsl stylesheet link (logo is set in css if wanted). -->
-    <xsl:param name="stylesheet-url" select="'https://github.com/Daniel-KM/OaiPmhRepository'" />
+    <!-- Url for the xsl stylesheet link (#logo-stylesheet is set for css if wanted). -->
+    <xsl:param name="stylesheet-url" select="'https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository'" />
     <xsl:param name="stylesheet-text" select="'Stylesheet by Daniel Berthereau'" />
 
     <!-- Let empty if this a normal repository. -->
     <xsl:param name="gateway-url" select="''" />
 
-    <!-- Url to css and javascripts. -->
+    <!-- Url to css and javascripts. Let empty to use the cdn. -->
+    <!-- Note: the external css/js libraries are not installed by default. -->
+    <!-- Omeka -->
+    <!--
     <xsl:param name="css-oai-pmh-repository" select="'../plugins/OaiPmhRepository/views/public/css/oai-pmh-repository.css'" />
     <xsl:param name="css-bootstrap" select="'../plugins/OaiPmhRepository/views/public/css/bootstrap.min.css'" />
     <xsl:param name="css-bootstrap-theme" select="'../plugins/OaiPmhRepository/views/public/css/bootstrap-theme.min.css'" />
     <xsl:param name="javascript-jquery" select="'../application/views/scripts/javascripts/vendor/jquery.js'" />
     <xsl:param name="javascript-bootstrap" select="'../plugins/OaiPmhRepository/views/public/javascripts/bootstrap.min.js'" />
+    -->
+    <!-- Omeka S -->
+    <!--
+    <xsl:param name="css-oai-pmh-repository" select="'modules/OaiPmhRepository/asset/css/oai-pmh-repository.css'" />
+    <xsl:param name="css-bootstrap" select="'modules/OaiPmhRepository/asset/vendor/bootstrap/css/bootstrap.min.css'" />
+    <xsl:param name="css-bootstrap-theme" select="'modules/OaiPmhRepository/asset/vendor/bootstrap/css/bootstrap-theme.min.css'" />
+    <xsl:param name="javascript-jquery" select="'modules/OaiPmhRepository/asset/vendor/jquery/jquery.min.js'" />
+    <xsl:param name="javascript-bootstrap" select="'modules/OaiPmhRepository/asset/vendor/bootstrap/js/bootstrap.min.js'" />
+    -->
+    <xsl:param name="css-oai-pmh-repository" select="''" />
+    <xsl:param name="css-bootstrap" select="''" />
+    <xsl:param name="css-bootstrap-theme" select="''" />
+    <xsl:param name="javascript-jquery" select="''" />
+    <xsl:param name="javascript-bootstrap" select="''" />
 
     <!-- This option is used by XML Verbatim. -->
     <xsl:param name="indent-elements" select="false()" />
@@ -120,8 +139,140 @@ No support (may depend on server):
                 </xsl:element>
                 <link rel="icon" href="/favicon.ico" />
                 <title><xsl:value-of select="$homepage-text" /></title>
-                <link rel="stylesheet" href="{$css-bootstrap}" type="text/css" />
-                <link rel="stylesheet" href="{$css-bootstrap-theme}" type="text/css" />
+                <xsl:choose>
+                    <xsl:when test="$css-bootstrap != ''">
+                        <link rel="stylesheet" href="{$css-bootstrap}" type="text/css" />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:choose>
+                    <xsl:when test="$css-bootstrap != ''">
+                        <link rel="stylesheet" href="{$css-bootstrap-theme}" type="text/css" />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous" />
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:choose>
+                    <xsl:when test="$css-oai-pmh-repository != ''">
+                        <link rel="stylesheet" href="{$css-oai-pmh-repository}" type="text/css" />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <style type="text/css">
+                        /* Styles to adapt bootstrap. */
+
+                        body {
+                            padding-top: 70px;
+                        }
+                        footer a {
+                            color: #000000;
+                        }
+                        footer a:hover {
+                            color: #000000;
+                        }
+                        a#logo {
+                            background: transparent none no-repeat scroll 0 0 / 100% 100%;
+                        /*  padding: 8px 51px; */
+                        }
+                        .vertical-space {
+                            height: 20px;
+                        }
+                        .xoai-contexts div:nth-child(even) {
+                            background-color: #eee;
+                        }
+                        pre {
+                            line-height: 0.8;
+                        }
+
+                        /* Styles specific to OAI-PMH. */
+
+                        .oaipmh h2 {
+                            border-bottom-style: inset;
+                        }
+                        .oaipmh table small {
+                            font-style: italic;
+                            margin-left: 10px;
+                        }
+                        .oaipmh-response .panel-heading a {
+                            color: #3c763d;
+                        }
+                        .oaipmh-description {
+                            padding-top: 16px;
+                        }
+                        .oaipmh-formats table thead th:first-child,
+                        .oaipmh-formats table tbody th,
+                        .oaipmh-sets table thead th:first-child,
+                        .oaipmh-sets table tbody th,
+                        .oaipmh-identifiers table thead th:first-child,
+                        .oaipmh-identifiers table tbody th,
+                        .oaipmh-records table thead th:first-child,
+                        .oaipmh-records table tbody th {
+                            text-align: right;
+                        }
+                        .oaipmh-formats table dl {
+                            margin-bottom: 12px;
+                            margin-top: 12px;
+                        }
+                        .oaipmh-records table {
+                            width: 100%;
+                        }
+                        .oaipmh-records table table {
+                            table-layout:fixed;
+                        }
+                        .oaipmh-records table tr.collapse td {
+                            word-wrap: break-word;
+                        }
+                        .oaipmh-record .panel-body {
+                            word-wrap: break-word;
+                        }
+
+                        /* Stylesheet from http://www2.informatik.hu-berlin.de/~obecker/XSLT/xmlverbatim/xmlverbatim.css */
+
+                        .xmlverb-default {
+                            color: #333333;
+                            background-color: #ffffff;
+                            font-family: monospace;
+                        }
+                        .xmlverb-element-name {
+                            color: #990000;
+                        }
+                        .xmlverb-element-nsprefix {
+                            color: #666600;
+                        }
+                        .xmlverb-attr-name {
+                            color: #660000;
+                        }
+                        .xmlverb-attr-content {
+                            color: #000099;
+                            font-weight: bold;
+                        }
+                        .xmlverb-ns-name {
+                            color: #666600;
+                        }
+                        .xmlverb-ns-uri {
+                            color: #330099;
+                        }
+                        .xmlverb-text {
+                            color: #000000;
+                            font-weight: bold;
+                        }
+                        .xmlverb-comment {
+                            color: #006600;
+                            font-style: italic;
+                        }
+                        .xmlverb-pi-name {
+                            color: #006600;
+                            font-style: italic;
+                        }
+                        .xmlverb-pi-content {
+                            color: #006666;
+                            font-style: italic;
+                        }
+                        </style>
+                    </xsl:otherwise>
+                </xsl:choose>
                 <xsl:comment>HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries</xsl:comment>
                 <xsl:comment><![CDATA[[if lt IE 9]>
                 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -138,7 +289,7 @@ No support (may depend on server):
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a class="navbar-brand">
+                            <a class="navbar-brand" id="logo">
                                 <xsl:attribute name="href">
                                     <xsl:value-of select="$url-homepage" />
                                 </xsl:attribute>
@@ -246,8 +397,22 @@ No support (may depend on server):
                         </div>
                     </div>
                 </footer>
-                <script type="text/javascript" src="{$javascript-jquery}" />
-                <script type="text/javascript" src="{$javascript-bootstrap}" />
+                <xsl:choose>
+                    <xsl:when test="$javascript-jquery != ''">
+                        <script type="text/javascript" src="{$javascript-jquery}" />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:choose>
+                    <xsl:when test="$javascript-bootstrap != ''">
+                        <script type="text/javascript" src="{$javascript-bootstrap}" />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+                    </xsl:otherwise>
+                </xsl:choose>
             </body>
         </html>
     </xsl:template>
