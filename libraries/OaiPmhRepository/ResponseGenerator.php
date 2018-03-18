@@ -214,13 +214,22 @@ class OaiPmhRepository_ResponseGenerator extends OaiPmhRepository_OaiXmlGenerato
     private function checkArguments($requiredArgs = array(), $optionalArgs = array())
     {
         $requiredArgs[] = 'verb';
-        
-        /* Checks (essentially), if there are more arguments in the query string
-           than in PHP's returned array, if so there were duplicate arguments,
-           which is not allowed. */
-        if($_SERVER['REQUEST_METHOD'] == 'GET' && (urldecode($_SERVER['QUERY_STRING']) != urldecode(http_build_query($this->query))))
-            $this->throwError(self::OAI_ERR_BAD_ARGUMENT, "Duplicate arguments in request.");
-        
+
+        // Checks (essentially), if there are more arguments in the query string
+        // than in PHP's returned array, if so there were duplicate arguments,
+        // which is not allowed.
+        switch ($_SERVER['REQUEST_METHOD']) {
+            case 'GET':
+                $query = $_SERVER['QUERY_STRING'];
+                if ((urldecode($query) != urldecode(http_build_query($this->query)))) {
+                    $this->throwError(self::OAI_ERR_BAD_ARGUMENT, "Duplicate arguments in request.");
+                }
+                break;
+            case 'POST':
+                // TODO Check duplicate post arguments.
+                break;
+        }
+
         $keys = array_keys($this->query);
         
         foreach(array_diff($requiredArgs, $keys) as $arg)
