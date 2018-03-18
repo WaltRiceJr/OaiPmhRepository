@@ -34,7 +34,7 @@ class OaiPmhRepository_RequestController extends Omeka_Controller_AbstractAction
 
         $this->_helper->viewRenderer->setNoRender();
         $response = $this->getResponse();
-        $response->setHeader('Content-Type', 'text/xml');
+        $response->setHeader('Content-Type', 'text/xml; charset=UTF-8');
         $response->appendBody(new OaiPmhRepository_ResponseGenerator($query));
     }
 }
