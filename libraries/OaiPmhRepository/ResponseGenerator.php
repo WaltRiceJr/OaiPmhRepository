@@ -29,9 +29,34 @@ class OaiPmhRepository_ResponseGenerator extends OaiPmhRepository_OaiXmlGenerato
      */
     private $metadataFormats;
 
+    /**
+     * Number of records to display by page.
+     *
+     * @var int
+     */
     private $_listLimit;
 
+    /**
+     * Number of minutes before expiration of token.
+     *
+     * @var int
+     */
     private $_tokenExpirationTime;
+
+    /**
+     * The toolkit describes the app that manages the repository.
+     *
+     * @link http://oai.dlib.vt.edu/OAI/metadata/toolkit.xsd.
+     * @var array
+     */
+    private $_toolkit;
+
+    /**
+     * The base url of the server, used for the OAI-PMH request.
+     *
+     * @var string
+     */
+    protected $baseUrl;
 
     /**
      * Constructor
@@ -45,6 +70,8 @@ class OaiPmhRepository_ResponseGenerator extends OaiPmhRepository_OaiXmlGenerato
     public function __construct($query)
     {
         $this->_loadConfig();
+
+        $this->baseUrl = OAI_PMH_BASE_URL;
 
         $this->error = false;
         $this->query = $query;
@@ -89,6 +116,7 @@ class OaiPmhRepository_ResponseGenerator extends OaiPmhRepository_OaiXmlGenerato
 
         $this->_listLimit = $ini->list_limit;
         $this->_tokenExpirationTime = $ini->token_expiration_time;
+        $this->_toolkit = $ini->toolkit->toArray();
     }
     
     /**
@@ -100,8 +128,7 @@ class OaiPmhRepository_ResponseGenerator extends OaiPmhRepository_OaiXmlGenerato
      */
     private function dispatchRequest()
     {
-        $request = $this->document->createElement('request',
-            OAI_PMH_BASE_URL);
+        $request = $this->document->createElement('request', $this->baseUrl);
         $this->document->documentElement->appendChild($request);
         
         $requiredArgs = array();
@@ -221,7 +248,7 @@ class OaiPmhRepository_ResponseGenerator extends OaiPmhRepository_OaiXmlGenerato
            response to validate */
         $elements = array( 
             'repositoryName'    => get_option('oaipmh_repository_name'),
-            'baseURL'           => OAI_PMH_BASE_URL,
+            'baseURL'           => $this->baseUrl,
             'protocolVersion'   => self::OAI_PMH_PROTOCOL_VERSION,
             'adminEmail'        => get_option('administrator_email'),
             'earliestDatestamp' => $this->_getEarliestDatestamp(),
@@ -243,6 +270,27 @@ class OaiPmhRepository_ResponseGenerator extends OaiPmhRepository_OaiXmlGenerato
         $description = $this->document->createElement('description');
         $identify->appendChild($description);
         OaiPmhRepository_OaiIdentifier::describeIdentifier($description);
+
+        $toolkitDescription = $this->document->createElement('description');
+        $identify->appendChild($toolkitDescription);
+        $this->describeToolkit($toolkitDescription);
+    }
+
+    private function describeToolkit($parentElement)
+    {
+        $toolkitNamespace = 'http://oai.dlib.vt.edu/OAI/metadata/toolkit';
+        $toolkitSchema = 'http://oai.dlib.vt.edu/OAI/metadata/toolkit.xsd';
+
+        $iniFile = OAI_PMH_REPOSITORY_PLUGIN_DIRECTORY . '/plugin.ini';
+        $ini = new Zend_Config_Ini($iniFile, 'info');
+        $version = $ini->version;
+
+        $elements = $this->_toolkit;
+        $elements['version'] = $version;
+
+        $toolkit = $parentElement->appendNewElementWithChildren('toolkit', $elements);
+        $toolkit->setAttribute('xsi:schemaLocation', "$toolkitNamespace $toolkitSchema");
+        $toolkit->setAttribute('xmlns', $toolkitNamespace);
     }
 
     /**
