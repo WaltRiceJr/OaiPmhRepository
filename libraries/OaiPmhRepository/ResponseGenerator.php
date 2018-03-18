@@ -130,7 +130,9 @@ class OaiPmhRepository_ResponseGenerator extends OaiPmhRepository_OaiXmlGenerato
     {
         $request = $this->document->createElement('request', $this->baseUrl);
         $this->document->documentElement->appendChild($request);
-        
+
+        $this->checkRequestMethod();
+
         $requiredArgs = array();
         $optionalArgs = array();
         if (!($verb = $this->_getParam('verb'))) {
@@ -186,7 +188,19 @@ class OaiPmhRepository_ResponseGenerator extends OaiPmhRepository_OaiXmlGenerato
             }
         }
     }
-    
+
+    /**
+     * Check the method of the request.
+     */
+    private function checkRequestMethod()
+    {
+        $method = $_SERVER['REQUEST_METHOD'];
+        if (!in_array($method, array('GET', 'POST'))) {
+            $this->throwError(self::OAI_ERR_BAD_ARGUMENT,
+                __('The OAI-PMH protocol version 2.0 supports only "GET" and "POST" requests, not "%s".', $method));
+        }
+    }
+
     /**
      * Checks the argument list from the POST/GET query.
      *
