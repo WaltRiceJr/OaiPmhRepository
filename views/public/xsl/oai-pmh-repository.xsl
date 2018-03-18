@@ -2,19 +2,22 @@
 <!--
 Stylesheet to display responses to OAI-PMH requests with a Bootstrap theme.
 
-This stylesheet is primarily designed for Omeka (https://omeka.org) and the
-plugins OAI-PMH Repository (https://omeka.org/add-ons/plugins/oai-pmh-repository) and
-OAI-PMH Gateway (https://github.com/Daniel-KM/OaiPmhGateway), but can be used by
-any OAI-PMH Data Provider (https://www.openarchives.org/pmh/register_data_provider).
+This stylesheet is primarily designed for Omeka Classic / Omeka S (https://omeka.org)
+and the plugins OAI-PMH Repository (https://omeka.org/classic/plugins/OaiPmhRepository /
+https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository)
+and OAI-PMH Gateway (https://github.com/Daniel-KM/OaiPmhGateway), but can be used by
+any OAI-PMH Data Provider (https://www.openarchives.org/pmh/register_data_provider)
+(just adapt the paths to the css and js for your application).
 
 Includes
 - Bootstrap, published under the MIT licence (see http://getbootstrap.com).
 - JQuery, published under the MIT licence (see https://jquery.com).
 - XML Verbatim, published under Apache License, Version 2  or LGPL (see below
-and see http://www2.informatik.hu-berlin.de/~obecker/XSLT/#xmlverbatim), adapted
-by Lyncode for DSpace, published under the DSpace Licence (see http://dspace.org/licence).
+and see http://www2.informatik.hu-berlin.de/~obecker/XSLT/#xmlverbatim),
+Initialy adapted from the stylesheet built by Lyncode for DSpace (http://www.lyncode.com/dspace/addons/xoai/),
+published under the DSpace BSD Licence (see http://dspace.org/licence).
 
-Copyright 2015 Daniel Berthereau (see https://github.com/Daniel-KM)
+Copyright (c) 2015-2017 Daniel Berthereau (see https://github.com/Daniel-KM)
 Copyright (c) 2002 Oliver Becker (XML Verbatim)
 Copyright (c) 2002-2015, DuraSpace.  All rights reserved.
 
@@ -58,6 +61,10 @@ No support (may depend on server):
     <!-- Url for "powered by" link (logo is set in css if wanted). -->
     <xsl:param name="powered-by-url" select="'https://omeka.org'" />
     <xsl:param name="powered-by-text" select="'Powered by Omeka'" />
+
+    <!-- Url for the xsl stylesheet link (logo is set in css if wanted). -->
+    <xsl:param name="stylesheet-url" select="'https://github.com/Daniel-KM/OaiPmhRepository'" />
+    <xsl:param name="stylesheet-text" select="'Stylesheet by Daniel Berthereau'" />
 
     <!-- Let empty if this a normal repository. -->
     <xsl:param name="gateway-url" select="''" />
@@ -117,10 +124,9 @@ No support (may depend on server):
                 <link rel="stylesheet" href="{$css-bootstrap-theme}" type="text/css" />
                 <xsl:comment>HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries</xsl:comment>
                 <xsl:comment><![CDATA[[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]]]></xsl:comment>
-                <link rel="stylesheet" href="{$css-oai-pmh-repository}" type="text/css" />
+                <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+                <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+                <![endif]]]></xsl:comment>
             </head>
             <body>
                 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -218,16 +224,26 @@ No support (may depend on server):
                 </div>
                 <footer class="footer">
                     <div class="container">
-                        <xsl:if test="$powered-by-url != '' and $powered-by-text != ''">
-                            <div class="row text-right">
-                                <div class="vertical-space"></div>
+                        <div class="row text-right">
+                            <div class="vertical-space"></div>
+                                <xsl:if test="$powered-by-url != '' and $powered-by-text != ''">
                                     <p><small><a href="{$powered-by-url}">
                                         <xsl:value-of select="$powered-by-text" />
                                     </a></small></p>
-                                    <a href="{$powered-by-url}" id="logo" />
-                                <div class="vertical-space"></div>
-                            </div>
-                        </xsl:if>
+                                </xsl:if>
+                                <a href="{$powered-by-url}" id="logo-powered-by" />
+                            <div class="vertical-space"></div>
+                        </div>
+                        <div class="row text-right">
+                            <div class="vertical-space"></div>
+                                <xsl:if test="$stylesheet-url != '' and $stylesheet-text != ''">
+                                    <p><small><a href="{$stylesheet-url}">
+                                        <xsl:value-of select="$stylesheet-text" />
+                                    </a></small></p>
+                                </xsl:if>
+                                <a href="{$stylesheet-url}" id="logo-stylesheet" />
+                            <div class="vertical-space"></div>
+                        </div>
                     </div>
                 </footer>
                 <script type="text/javascript" src="{$javascript-jquery}" />
