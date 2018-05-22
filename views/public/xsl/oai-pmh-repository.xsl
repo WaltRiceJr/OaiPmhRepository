@@ -48,7 +48,9 @@ No support (may depend on server):
     xmlns:oai_provenance="http://www.openarchives.org/OAI/2.0/provenance"
     xmlns:toolkit="http://oai.dlib.vt.edu/OAI/metadata/toolkit"
     xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
+    xmlns:oai_dcq="http://www.bl.uk/namespaces/oai_dcq/"
     xmlns:dc="http://purl.org/dc/doc:elements/1.1/"
+    xmlns:dcterms="http://purl.org/dc/terms/"
     xmlns:verb="http://informatik.hu-berlin.de/xmlverbatim"
     exclude-result-prefixes="oai oai_identifier oai_rights oai_friends oai_branding oai_gateway toolkit oai_provenance oai_dc dc verb">
 
@@ -945,6 +947,17 @@ No support (may depend on server):
                                                         </xsl:choose>
                                                     </td>
                                                 </tr>
+                                                <xsl:if test="oai:metadata/oai_dcq:qualifieddc/dcterms:hasFormat[(substring(text(), 1, 8) = 'https://' or substring(text(), 1, 7) = 'http://') and (substring(text(), string-length(text()) - 3, 4) = '.jpg' or substring(text(), string-length(text()) - 3, 4) = '.JPG')]">
+                                                    <tr>
+                                                        <td>
+                                                            <xsl:for-each select="oai:metadata/oai_dcq:qualifieddc/dcterms:hasFormat[(substring(text(), 1, 8) = 'https://' or substring(text(), 1, 7) = 'http://') and (substring(text(), string-length(text()) - 3, 4) = '.jpg' or substring(text(), string-length(text()) - 3, 4) = '.JPG')]">
+                                                                <img class="thumb">
+                                                                    <xsl:attribute name="src"><xsl:value-of select="text()" /></xsl:attribute>
+                                                                </img>
+                                                            </xsl:for-each>
+                                                        </td>
+                                                    </tr>
+                                                </xsl:if>
                                             </tbody>
                                         </table>
                                     </td>
@@ -1000,6 +1013,16 @@ No support (may depend on server):
                                 <xsl:apply-templates select="oai:about/*" mode='xmlverb' />
                             </xsl:otherwise>
                         </xsl:choose>
+
+                        <xsl:if test="oai:metadata/oai_dcq:qualifieddc/dcterms:hasFormat">
+                            <div>
+                                <xsl:for-each select="oai:metadata/oai_dcq:qualifieddc/dcterms:hasFormat">
+                                    <img class="thumb">
+                                        <xsl:attribute name="src"><xsl:value-of select="text()" /></xsl:attribute>
+                                    </img>
+                                </xsl:for-each>
+                            </div>
+                        </xsl:if>
                     </div>
                 </div>
             </xsl:for-each>
