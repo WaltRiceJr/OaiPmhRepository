@@ -58,6 +58,8 @@ class OaiPmhRepository_ResponseGenerator extends OaiPmhRepository_OaiXmlGenerato
      */
     protected $baseUrl;
 
+    private $_xslTransform;
+
     /**
      * Constructor
      *
@@ -117,6 +119,7 @@ class OaiPmhRepository_ResponseGenerator extends OaiPmhRepository_OaiXmlGenerato
         $this->_listLimit = $ini->list_limit;
         $this->_tokenExpirationTime = $ini->token_expiration_time;
         $this->_toolkit = $ini->toolkit->toArray();
+        $this->_xslTransform = $ini->xsl_transform;
     }
     
     /**
@@ -681,11 +684,27 @@ class OaiPmhRepository_ResponseGenerator extends OaiPmhRepository_OaiXmlGenerato
         $this->appendHeader($record, $item);
         
         $metadata = $this->document->createElement('metadata');
-        $record->appendChild($metadata);
         
         $formatClass = $this->metadataFormats[$metadataPrefix]['class'];
         $format = new $formatClass;
+
         $format->appendMetadata($item, $metadata);
+
+        $output = $metadata;
+
+        if ($this->_xslTransform != "")
+        {
+            $xsl = new DOMDocument();
+            $xsl->load($this->_xslTransform);
+            $input = new DOMDocument();
+            $input->loadXML($metadata->ownerDocument->saveXML($metadata));
+            $processor = new XSLTProcessor();
+            $processor->importStylesheet($xsl);
+            $output = $this->document->createDocumentFragment();
+            $output->appendXML($processor->transformToXml($input));
+        }
+
+        $record->appendChild($output);
     }
         
     /**
