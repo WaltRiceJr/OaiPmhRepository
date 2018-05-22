@@ -176,8 +176,10 @@ class OaiPmhRepositoryPlugin extends Omeka_Plugin_AbstractPlugin
 
     private function _getServerName()
     {
-        $name = preg_replace('/[^a-z0-9\-\.]/i', '', $_SERVER['SERVER_NAME']);
-        if ($name == 'localhost') {
+        $serverName = preg_replace('~(?:\w+://)?([^:]+)(?::\d*)?$~', '$1', $_SERVER['SERVER_NAME']);
+
+        $name = preg_replace('/[^a-z0-9\-\.]/i', '', $serverName);
+        if (empty($name) || $name === 'localhost') {
             $name = 'default.must.change';
         }
 
